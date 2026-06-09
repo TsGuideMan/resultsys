@@ -1152,8 +1152,8 @@ const App = {
     const male = students.filter(st => st.gender === 'Male').length;
     const female = students.filter(st => st.gender === 'Female').length;
     const totalGendered = male + female || 1;
-    const faculties = {};
-    students.forEach(st => { faculties[st.faculty] = (faculties[st.faculty] || 0) + 1; });
+    const faculties = { 'Common': 0, 'General': 0, 'Technical': 0 };
+    students.forEach(st => { if (st.faculty) faculties[st.faculty] = (faculties[st.faculty] || 0) + 1; });
     const avgGpa = (arr) => arr.length ? (arr.reduce((sum, r) => sum + parseFloat(r.gpa||0), 0) / arr.length).toFixed(2) : '—';
     const gradeColors = {'A+':'#059669','A':'#10b981','B+':'#34d399','B':'#facc15','C+':'#f59e0b','C':'#f97316','D':'#ef4444','E':'#dc2626','NG':'#6b7280'};
     const genderPct = (n) => (n / totalGendered * 100).toFixed(1);
