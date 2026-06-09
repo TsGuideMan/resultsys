@@ -28,9 +28,9 @@ body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color
 }
 .sidebar-nav a.nav-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
 .sidebar-nav a.nav-item.active { background: rgba(255,255,255,0.15); color: #fff; border-right: 3px solid #60a5fa; }
-.sidebar-nav .icon { font-size: 15px; width: 20px; text-align: center; flex-shrink: 0; }
-.sidebar-nav .sub-icon { font-size: 10px; width: 16px; color: rgba(255,255,255,0.4); }
-.sidebar-nav .nav-arrow { margin-left: auto; font-size: 12px; transition: transform 0.2s; color: rgba(255,255,255,0.4); }
+.sidebar-nav .material-symbols-outlined { font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; vertical-align: middle; }
+.sidebar-nav .sub-icon { font-size: 14px; width: 20px; color: rgba(255,255,255,0.5); font-variation-settings: 'FILL' 1; }
+.sidebar-nav .nav-arrow { margin-left: auto; font-size: 18px; transition: transform 0.2s; color: rgba(255,255,255,0.4); }
 .nav-category.open .nav-arrow { transform: rotate(90deg); }
 .nav-category-header {
   display: flex; align-items: center; padding: 10px 20px; color: rgba(255,255,255,0.7);

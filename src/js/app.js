@@ -211,155 +211,155 @@ const App = {
 
     const menu = {
       super_admin: [
-        { type: 'link', page: 'dashboard', icon: '📊', label: 'Dashboard', cls: 'super-admin' },
-        { type: 'link', page: 'schools', icon: '🏫', label: 'School Management', cls: 'super-admin' },
-        { type: 'link', page: 'users', icon: '👥', label: 'User Management', cls: 'super-admin' },
+        { type: 'link', page: 'dashboard', icon: 'dashboard', label: 'Dashboard', cls: 'super-admin' },
+        { type: 'link', page: 'schools', icon: 'school', label: 'School Management', cls: 'super-admin' },
+        { type: 'link', page: 'users', icon: 'group', label: 'User Management', cls: 'super-admin' },
         { type: 'separator' },
-        { type: 'category', icon: '👨‍🎓', label: 'Student Manage', cls: 'super-admin', items: [
-          { page: 'student-list', icon: '▸', label: 'Student List' },
-          { page: 'student-profile', icon: '▸', label: 'Student Profile' },
-          { page: 'student-bulk-import', icon: '▸', label: 'Bulk Import' },
-          { page: 'id-card', icon: '▸', label: 'ID Card' },
-          { page: 'transfer-cert', icon: '▸', label: 'TC' },
+        { type: 'category', icon: 'assignment_ind', label: 'Student Manage', cls: 'super-admin', items: [
+          { page: 'student-list', icon: 'circle', label: 'Student List' },
+          { page: 'student-profile', icon: 'circle', label: 'Student Profile' },
+          { page: 'student-bulk-import', icon: 'circle', label: 'Bulk Import' },
+          { page: 'id-card', icon: 'circle', label: 'ID Card' },
+          { page: 'transfer-cert', icon: 'circle', label: 'TC' },
         ]},
-        { type: 'category', icon: '👨‍🏫', label: 'Teacher & Staff', cls: 'super-admin', items: [
-          { page: 'teacher-reg', icon: '▸', label: 'Teacher Registration' },
-          { page: 'staff-reg', icon: '▸', label: 'Staff Registration' },
-          { page: 'teacher-list', icon: '▸', label: 'Teacher List' },
-          { page: 'staff-attendance', icon: '▸', label: 'Staff Attendance' },
+        { type: 'category', icon: 'badge', label: 'Teacher & Staff', cls: 'super-admin', items: [
+          { page: 'teacher-reg', icon: 'circle', label: 'Teacher Registration' },
+          { page: 'staff-reg', icon: 'circle', label: 'Staff Registration' },
+          { page: 'teacher-list', icon: 'circle', label: 'Teacher List' },
+          { page: 'staff-attendance', icon: 'circle', label: 'Staff Attendance' },
         ]},
-        { type: 'category', icon: '📚', label: 'Academic', cls: 'super-admin', items: [
-          { page: 'class-manage', icon: '▸', label: 'Class Manage' },
-          { page: 'section-manage', icon: '▸', label: 'Section Manage' },
-          { page: 'subjects', icon: '▸', label: 'Subject Manage' },
-          { page: 'class-routine', icon: '▸', label: 'Class Routine' },
+        { type: 'category', icon: 'menu_book', label: 'Academic', cls: 'super-admin', items: [
+          { page: 'class-manage', icon: 'circle', label: 'Class Manage' },
+          { page: 'section-manage', icon: 'circle', label: 'Section Manage' },
+          { page: 'subjects', icon: 'circle', label: 'Subject Manage' },
+          { page: 'class-routine', icon: 'circle', label: 'Class Routine' },
         ]},
-        { type: 'category', icon: '📝', label: 'Exam', cls: 'super-admin', items: [
-          { page: 'subjectreg', icon: '▸', label: 'Sub. Registration' },
-          { page: 'admitcard', icon: '▸', label: 'Admit Card' },
-          { page: 'marks', icon: '▸', label: 'Marks Entry' },
-          { page: 'markledger', icon: '▸', label: 'Mark Ledger' },
-          { page: 'gradeledger', icon: '▸', label: 'Grade Ledger' },
-          { page: 'gpledger', icon: '▸', label: 'GP Ledger' },
-          { page: 'results', icon: '▸', label: 'Results' },
+        { type: 'category', icon: 'edit_note', label: 'Exam', cls: 'super-admin', items: [
+          { page: 'subjectreg', icon: 'circle', label: 'Sub. Registration' },
+          { page: 'admitcard', icon: 'circle', label: 'Admit Card' },
+          { page: 'marks', icon: 'circle', label: 'Marks Entry' },
+          { page: 'markledger', icon: 'circle', label: 'Mark Ledger' },
+          { page: 'gradeledger', icon: 'circle', label: 'Grade Ledger' },
+          { page: 'gpledger', icon: 'circle', label: 'GP Ledger' },
+          { page: 'results', icon: 'circle', label: 'Results' },
         ]},
-        { type: 'category', icon: '📅', label: 'Attendance', cls: 'super-admin', items: [
-          { page: 'student-attendance', icon: '▸', label: 'Student Attendance' },
-          { page: 'teacher-attendance', icon: '▸', label: 'Teacher Attendance' },
-          { page: 'attendance-report', icon: '▸', label: 'Attendance Report' },
+        { type: 'category', icon: 'calendar_month', label: 'Attendance', cls: 'super-admin', items: [
+          { page: 'student-attendance', icon: 'circle', label: 'Student Attendance' },
+          { page: 'teacher-attendance', icon: 'circle', label: 'Teacher Attendance' },
+          { page: 'attendance-report', icon: 'circle', label: 'Attendance Report' },
         ]},
-        { type: 'category', icon: '💰', label: 'Bill', cls: 'super-admin', items: [
-          { page: 'fee-setup', icon: '▸', label: 'Fee Setup' },
-          { page: 'fee-collection', icon: '▸', label: 'Fee Collection' },
-          { page: 'due-list', icon: '▸', label: 'Due List' },
-          { page: 'receipt-print', icon: '▸', label: 'Receipt Print' },
-          { page: 'income-report', icon: '▸', label: 'Income Report' },
+        { type: 'category', icon: 'payments', label: 'Bill', cls: 'super-admin', items: [
+          { page: 'fee-setup', icon: 'circle', label: 'Fee Setup' },
+          { page: 'fee-collection', icon: 'circle', label: 'Fee Collection' },
+          { page: 'due-list', icon: 'circle', label: 'Due List' },
+          { page: 'receipt-print', icon: 'circle', label: 'Receipt Print' },
+          { page: 'income-report', icon: 'circle', label: 'Income Report' },
         ]},
-        { type: 'category', icon: '📖', label: 'Library', cls: 'super-admin', items: [
-          { page: 'book-entry', icon: '▸', label: 'Book Entry' },
-          { page: 'book-issue', icon: '▸', label: 'Book Issue' },
-          { page: 'book-return', icon: '▸', label: 'Book Return' },
-          { page: 'book-list', icon: '▸', label: 'Book List' },
+        { type: 'category', icon: 'library_books', label: 'Library', cls: 'super-admin', items: [
+          { page: 'book-entry', icon: 'circle', label: 'Book Entry' },
+          { page: 'book-issue', icon: 'circle', label: 'Book Issue' },
+          { page: 'book-return', icon: 'circle', label: 'Book Return' },
+          { page: 'book-list', icon: 'circle', label: 'Book List' },
         ]},
-        { type: 'link', page: 'settings', icon: '⚙️', label: 'Settings', cls: 'super-admin' },
+        { type: 'link', page: 'settings', icon: 'settings', label: 'Settings', cls: 'super-admin' },
       ],
       school_admin: [
-        { type: 'link', page: 'dashboard', icon: '📊', label: 'Dashboard' },
-        { type: 'link', page: 'students', icon: '👨‍🎓', label: 'Student Registration' },
-        { type: 'category', icon: '📋', label: 'Student Manage', items: [
-          { page: 'student-list', icon: '▸', label: 'Student List' },
-          { page: 'student-profile', icon: '▸', label: 'Student Profile' },
-          { page: 'student-bulk-import', icon: '▸', label: 'Bulk Import' },
-          { page: 'student-promotion', icon: '▸', label: 'Promotion' },
-          { page: 'id-card', icon: '▸', label: 'ID Card' },
-          { page: 'transfer-cert', icon: '▸', label: 'TC' },
+        { type: 'link', page: 'dashboard', icon: 'dashboard', label: 'Dashboard' },
+        { type: 'link', page: 'students', icon: 'person_add', label: 'Student Registration' },
+        { type: 'category', icon: 'assignment_ind', label: 'Student Manage', items: [
+          { page: 'student-list', icon: 'circle', label: 'Student List' },
+          { page: 'student-profile', icon: 'circle', label: 'Student Profile' },
+          { page: 'student-bulk-import', icon: 'circle', label: 'Bulk Import' },
+          { page: 'student-promotion', icon: 'circle', label: 'Promotion' },
+          { page: 'id-card', icon: 'circle', label: 'ID Card' },
+          { page: 'transfer-cert', icon: 'circle', label: 'TC' },
         ]},
-        { type: 'category', icon: '👨‍🏫', label: 'Teacher & Staff', items: [
-          { page: 'teacher-reg', icon: '▸', label: 'Teacher Registration' },
-          { page: 'staff-reg', icon: '▸', label: 'Staff Registration' },
-          { page: 'teacher-list', icon: '▸', label: 'Teacher List' },
-          { page: 'staff-attendance', icon: '▸', label: 'Staff Attendance' },
+        { type: 'category', icon: 'badge', label: 'Teacher & Staff', items: [
+          { page: 'teacher-reg', icon: 'circle', label: 'Teacher Registration' },
+          { page: 'staff-reg', icon: 'circle', label: 'Staff Registration' },
+          { page: 'teacher-list', icon: 'circle', label: 'Teacher List' },
+          { page: 'staff-attendance', icon: 'circle', label: 'Staff Attendance' },
         ]},
-        { type: 'category', icon: '📚', label: 'Academic', items: [
-          { page: 'class-manage', icon: '▸', label: 'Class Manage' },
-          { page: 'section-manage', icon: '▸', label: 'Section Manage' },
-          { page: 'subjects', icon: '▸', label: 'Subject Manage' },
-          { page: 'class-routine', icon: '▸', label: 'Class Routine' },
+        { type: 'category', icon: 'menu_book', label: 'Academic', items: [
+          { page: 'class-manage', icon: 'circle', label: 'Class Manage' },
+          { page: 'section-manage', icon: 'circle', label: 'Section Manage' },
+          { page: 'subjects', icon: 'circle', label: 'Subject Manage' },
+          { page: 'class-routine', icon: 'circle', label: 'Class Routine' },
         ]},
-        { type: 'category', icon: '📝', label: 'Exam', items: [
-          { page: 'subjectreg', icon: '▸', label: 'Sub. Registration' },
-          { page: 'admitcard', icon: '▸', label: 'Admit Card' },
-          { page: 'marks', icon: '▸', label: 'Marks Entry' },
-          { page: 'markledger', icon: '▸', label: 'Mark Ledger' },
-          { page: 'gradeledger', icon: '▸', label: 'Grade Ledger' },
-          { page: 'gpledger', icon: '▸', label: 'GP Ledger' },
-          { page: 'results', icon: '▸', label: 'Results' },
+        { type: 'category', icon: 'edit_note', label: 'Exam', items: [
+          { page: 'subjectreg', icon: 'circle', label: 'Sub. Registration' },
+          { page: 'admitcard', icon: 'circle', label: 'Admit Card' },
+          { page: 'marks', icon: 'circle', label: 'Marks Entry' },
+          { page: 'markledger', icon: 'circle', label: 'Mark Ledger' },
+          { page: 'gradeledger', icon: 'circle', label: 'Grade Ledger' },
+          { page: 'gpledger', icon: 'circle', label: 'GP Ledger' },
+          { page: 'results', icon: 'circle', label: 'Results' },
         ]},
-        { type: 'category', icon: '📅', label: 'Attendance', items: [
-          { page: 'student-attendance', icon: '▸', label: 'Student Attendance' },
-          { page: 'teacher-attendance', icon: '▸', label: 'Teacher Attendance' },
-          { page: 'attendance-report', icon: '▸', label: 'Attendance Report' },
+        { type: 'category', icon: 'calendar_month', label: 'Attendance', items: [
+          { page: 'student-attendance', icon: 'circle', label: 'Student Attendance' },
+          { page: 'teacher-attendance', icon: 'circle', label: 'Teacher Attendance' },
+          { page: 'attendance-report', icon: 'circle', label: 'Attendance Report' },
         ]},
-        { type: 'category', icon: '💰', label: 'Bill', items: [
-          { page: 'fee-setup', icon: '▸', label: 'Fee Setup' },
-          { page: 'fee-collection', icon: '▸', label: 'Fee Collection' },
-          { page: 'due-list', icon: '▸', label: 'Due List' },
-          { page: 'receipt-print', icon: '▸', label: 'Receipt Print' },
-          { page: 'income-report', icon: '▸', label: 'Income Report' },
+        { type: 'category', icon: 'payments', label: 'Bill', items: [
+          { page: 'fee-setup', icon: 'circle', label: 'Fee Setup' },
+          { page: 'fee-collection', icon: 'circle', label: 'Fee Collection' },
+          { page: 'due-list', icon: 'circle', label: 'Due List' },
+          { page: 'receipt-print', icon: 'circle', label: 'Receipt Print' },
+          { page: 'income-report', icon: 'circle', label: 'Income Report' },
         ]},
-        { type: 'category', icon: '📖', label: 'Library', items: [
-          { page: 'book-entry', icon: '▸', label: 'Book Entry' },
-          { page: 'book-issue', icon: '▸', label: 'Book Issue' },
-          { page: 'book-return', icon: '▸', label: 'Book Return' },
-          { page: 'book-list', icon: '▸', label: 'Book List' },
+        { type: 'category', icon: 'library_books', label: 'Library', items: [
+          { page: 'book-entry', icon: 'circle', label: 'Book Entry' },
+          { page: 'book-issue', icon: 'circle', label: 'Book Issue' },
+          { page: 'book-return', icon: 'circle', label: 'Book Return' },
+          { page: 'book-list', icon: 'circle', label: 'Book List' },
         ]},
-        { type: 'category', icon: '📄', label: 'Certificate', items: [
-          { page: 'character-cert', icon: '▸', label: 'Character Cert' },
-          { page: 'bonafide-cert', icon: '▸', label: 'Bonafide Cert' },
-          { page: 'transfer-cert', icon: '▸', label: 'TC' },
+        { type: 'category', icon: 'description', label: 'Certificate', items: [
+          { page: 'character-cert', icon: 'circle', label: 'Character Cert' },
+          { page: 'bonafide-cert', icon: 'circle', label: 'Bonafide Cert' },
+          { page: 'transfer-cert', icon: 'circle', label: 'TC' },
         ]},
-        { type: 'category', icon: '📊', label: 'Reports', items: [
-          { page: 'student-report', icon: '▸', label: 'Student Report' },
-          { page: 'attendance-report', icon: '▸', label: 'Attendance Report' },
-          { page: 'exam-report', icon: '▸', label: 'Exam Report' },
-          { page: 'fee-report', icon: '▸', label: 'Fee Report' },
+        { type: 'category', icon: 'bar_chart', label: 'Reports', items: [
+          { page: 'student-report', icon: 'circle', label: 'Student Report' },
+          { page: 'attendance-report', icon: 'circle', label: 'Attendance Report' },
+          { page: 'exam-report', icon: 'circle', label: 'Exam Report' },
+          { page: 'fee-report', icon: 'circle', label: 'Fee Report' },
         ]},
-        { type: 'link', page: 'settings', icon: '⚙️', label: 'Settings' },
+        { type: 'link', page: 'settings', icon: 'settings', label: 'Settings' },
       ],
       teacher: [
-        { type: 'link', page: 'dashboard', icon: '📊', label: 'Dashboard' },
-        { type: 'category', icon: '📝', label: 'Exam', items: [
-          { page: 'marks', icon: '▸', label: 'Marks Entry' },
-          { page: 'results', icon: '▸', label: 'Results' },
+        { type: 'link', page: 'dashboard', icon: 'dashboard', label: 'Dashboard' },
+        { type: 'category', icon: 'edit_note', label: 'Exam', items: [
+          { page: 'marks', icon: 'circle', label: 'Marks Entry' },
+          { page: 'results', icon: 'circle', label: 'Results' },
         ]},
-        { type: 'category', icon: '📅', label: 'Attendance', items: [
-          { page: 'student-attendance', icon: '▸', label: 'Student Attendance' },
+        { type: 'category', icon: 'calendar_month', label: 'Attendance', items: [
+          { page: 'student-attendance', icon: 'circle', label: 'Student Attendance' },
         ]},
       ],
       accountant: [
-        { type: 'link', page: 'dashboard', icon: '📊', label: 'Dashboard' },
-        { type: 'category', icon: '💰', label: 'Bill', items: [
-          { page: 'fee-setup', icon: '▸', label: 'Fee Setup' },
-          { page: 'fee-collection', icon: '▸', label: 'Fee Collection' },
-          { page: 'due-list', icon: '▸', label: 'Due List' },
-          { page: 'receipt-print', icon: '▸', label: 'Receipt Print' },
-          { page: 'income-report', icon: '▸', label: 'Income Report' },
+        { type: 'link', page: 'dashboard', icon: 'dashboard', label: 'Dashboard' },
+        { type: 'category', icon: 'payments', label: 'Bill', items: [
+          { page: 'fee-setup', icon: 'circle', label: 'Fee Setup' },
+          { page: 'fee-collection', icon: 'circle', label: 'Fee Collection' },
+          { page: 'due-list', icon: 'circle', label: 'Due List' },
+          { page: 'receipt-print', icon: 'circle', label: 'Receipt Print' },
+          { page: 'income-report', icon: 'circle', label: 'Income Report' },
         ]},
       ],
       librarian: [
-        { type: 'link', page: 'dashboard', icon: '📊', label: 'Dashboard' },
-        { type: 'category', icon: '📖', label: 'Library', items: [
-          { page: 'book-entry', icon: '▸', label: 'Book Entry' },
-          { page: 'book-issue', icon: '▸', label: 'Book Issue' },
-          { page: 'book-return', icon: '▸', label: 'Book Return' },
-          { page: 'book-list', icon: '▸', label: 'Book List' },
+        { type: 'link', page: 'dashboard', icon: 'dashboard', label: 'Dashboard' },
+        { type: 'category', icon: 'library_books', label: 'Library', items: [
+          { page: 'book-entry', icon: 'circle', label: 'Book Entry' },
+          { page: 'book-issue', icon: 'circle', label: 'Book Issue' },
+          { page: 'book-return', icon: 'circle', label: 'Book Return' },
+          { page: 'book-list', icon: 'circle', label: 'Book List' },
         ]},
       ],
       staff: [
-        { type: 'link', page: 'dashboard', icon: '📊', label: 'Dashboard' },
-        { type: 'category', icon: '📅', label: 'Attendance', items: [
-          { page: 'student-attendance', icon: '▸', label: 'Attendance' },
-          { page: 'attendance-report', icon: '▸', label: 'Report' },
+        { type: 'link', page: 'dashboard', icon: 'dashboard', label: 'Dashboard' },
+        { type: 'category', icon: 'calendar_month', label: 'Attendance', items: [
+          { page: 'student-attendance', icon: 'circle', label: 'Attendance' },
+          { page: 'attendance-report', icon: 'circle', label: 'Report' },
         ]},
       ],
     };
@@ -368,15 +368,15 @@ const App = {
     items.forEach(item => {
       if (item.type === 'separator') { html += '<hr style="border-color:rgba(255,255,255,0.08);margin:4px 0;">'; return; }
       if (item.type === 'link') {
-        html += `<a href="#" data-page="${item.page}" class="nav-item ${item.cls||''}"><span class="icon">${item.icon}</span> ${item.label}</a>`;
+        html += `<a href="#" data-page="${item.page}" class="nav-item ${item.cls||''}"><span class="material-symbols-outlined">${item.icon}</span> ${item.label}</a>`;
       } else if (item.type === 'category') {
         html += `<div class="nav-category ${item.cls||''}">
           <div class="nav-category-header" onclick="App.toggleNavCategory(this)">
-            <span class="icon">${item.icon}</span> ${item.label} <span class="nav-arrow">▸</span>
+            <span class="material-symbols-outlined">${item.icon}</span> ${item.label} <span class="material-symbols-outlined nav-arrow">chevron_right</span>
           </div>
           <div class="nav-submenu">`;
         item.items.forEach(sub => {
-          html += `<a href="#" data-page="${sub.page}" class="nav-item"><span class="icon sub-icon">${sub.icon}</span> ${sub.label}</a>`;
+          html += `<a href="#" data-page="${sub.page}" class="nav-item"><span class="material-symbols-outlined sub-icon">${sub.icon}</span> ${sub.label}</a>`;
         });
         html += `</div></div>`;
       }
@@ -8998,21 +8998,21 @@ const App = {
 
   renderPlaceholder(page, title) {
     const icons = {
-      'student-list':'👨‍🎓', 'student-profile':'👤', 'student-promotion':'📈', 'transfer-cert':'📜', 'id-card':'🪪',
-      'teacher-reg':'👨‍🏫', 'staff-reg':'👩‍💼', 'teacher-list':'📋', 'staff-attendance':'✅',
-      'class-manage':'📚', 'section-manage':'📐', 'class-routine':'📅',
-      'exam-subjects':'📝',
-      'student-attendance':'📋', 'teacher-attendance':'📋', 'attendance-report':'📊',
-      'fee-setup':'💰', 'fee-collection':'💳', 'due-list':'📋', 'receipt-print':'🧾', 'income-report':'📊',
-      'book-entry':'📖', 'book-issue':'📕', 'book-return':'📗', 'book-list':'📚',
-      'character-cert':'📜', 'bonafide-cert':'📜',
-      'student-report':'📊', 'exam-report':'📊', 'fee-report':'📊'
+      'student-list':'school', 'student-profile':'account_circle', 'student-promotion':'trending_up', 'transfer-cert':'description', 'id-card':'badge',
+      'teacher-reg':'badge', 'staff-reg':'badge', 'teacher-list':'list', 'staff-attendance':'check_circle',
+      'class-manage':'menu_book', 'section-manage':'account_tree', 'class-routine':'calendar_month',
+      'exam-subjects':'edit_note',
+      'student-attendance':'list_alt', 'teacher-attendance':'list_alt', 'attendance-report':'bar_chart',
+      'fee-setup':'payments', 'fee-collection':'credit_card', 'due-list':'list_alt', 'receipt-print':'receipt', 'income-report':'bar_chart',
+      'book-entry':'library_books', 'book-issue':'bookmark', 'book-return':'bookmark_add', 'book-list':'list',
+      'character-cert':'description', 'bonafide-cert':'description',
+      'student-report':'bar_chart', 'exam-report':'bar_chart', 'fee-report':'bar_chart'
     };
-    const icon = icons[page] || '🔧';
+    const iconName = icons[page] || 'settings';
     const container = document.getElementById('pageContent');
     container.innerHTML = `
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;text-align:center;">
-        <div style="font-size:64px;margin-bottom:20px;">${icon}</div>
+        <span class="material-symbols-outlined" style="font-size:64px;color:var(--primary);margin-bottom:16px;">${iconName}</span>
         <h2 style="margin-bottom:8px;">${title}</h2>
         <p class="text-muted" style="max-width:400px;">यो पेज निर्माणाधीन छ। चाँडै उपलब्ध हुनेछ।</p>
       </div>`;
