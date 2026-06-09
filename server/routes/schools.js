@@ -55,4 +55,22 @@ router.delete('/:id', authMiddleware, adminOnly, async (req, res) => {
   } catch (e) { return res.json({ success: false, error: e.message }); }
 });
 
+router.post('/:id/approve', authMiddleware, adminOnly, async (req, res) => {
+  try {
+    await execute("UPDATE schools SET is_approved=1 WHERE id=?", [req.params.id]);
+    // Also activate the school admin user
+    await execute("UPDATE users SET is_active=1 WHERE school_id=? AND role='school_admin'", [req.params.id]);
+    return res.json({ success: true, message: 'School approved successfully' });
+  } catch (e) { return res.json({ success: false, error: e.message }); }
+});
+
+router.post('/:id/reject', authMiddleware, adminOnly, async (req, res) => {
+  try {
+    await execute("UPDATE schools SET is_approved=-1 WHERE id=?", [req.params.id]);
+    // Deactivate the school admin user
+    await execute("UPDATE users SET is_active=0 WHERE school_id=? AND role='school_admin'", [req.params.id]);
+    return res.json({ success: true, message: 'School rejected' });
+  } catch (e) { return res.json({ success: false, error: e.message }); }
+});
+
 module.exports = router;

@@ -7,10 +7,120 @@
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+<style>
+.landing-page { min-height: 100vh; display: flex; flex-direction: column; background: linear-gradient(135deg, #0f2440 0%, #1e3a5f 50%, #1a56db 100%); }
+.landing-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 32px; }
+.landing-logo { display: flex; align-items: center; gap: 10px; color: #fff; }
+.landing-logo span.material-symbols-outlined { font-size: 32px; }
+.landing-logo h1 { font-size: 20px; font-weight: 600; margin: 0; }
+.landing-logo small { font-size: 11px; opacity: 0.7; display: block; }
+.landing-actions { display: flex; gap: 8px; }
+.landing-actions button { padding: 8px 20px; border-radius: 6px; font-size: 14px; cursor: pointer; border: none; font-weight: 500; transition: all 0.2s; }
+.btn-landing-login { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.25) !important; }
+.btn-landing-login:hover { background: rgba(255,255,255,0.25); }
+.btn-landing-signup { background: #60a5fa; color: #fff; }
+.btn-landing-signup:hover { background: #3b82f6; }
+.landing-hero { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 20px; color: #fff; }
+.landing-hero h2 { font-size: 36px; font-weight: 700; margin: 0 0 12px; }
+.landing-hero p { font-size: 16px; opacity: 0.85; max-width: 500px; line-height: 1.6; margin: 0 0 32px; }
+.landing-features { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; max-width: 700px; }
+.landing-feature { background: rgba(255,255,255,0.1); border-radius: 10px; padding: 16px 20px; width: 180px; text-align: center; }
+.landing-feature span.material-symbols-outlined { font-size: 32px; margin-bottom: 6px; color: #93c5fd; }
+.landing-feature h4 { font-size: 14px; margin: 0 0 4px; }
+.landing-feature p { font-size: 11px; opacity: 0.7; margin: 0; }
+.landing-footer { text-align: center; padding: 16px; color: rgba(255,255,255,0.4); font-size: 12px; }
+.landing-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
+.landing-overlay.active { display: flex; }
+.landing-form-card { background: #fff; border-radius: 12px; padding: 32px; width: 100%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); position: relative; max-height: 90vh; overflow-y: auto; }
+.landing-form-card h3 { font-size: 20px; margin: 0 0 6px; color: var(--text); }
+.landing-form-card .text-muted { font-size: 13px; }
+.landing-form-card .form-group { margin-bottom: 12px; }
+.landing-form-card .form-control { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; }
+.landing-form-card .btn { width: 100%; padding: 10px; font-size: 14px; }
+.landing-form-card .close-btn { position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 24px; cursor: pointer; color: #9ca3af; }
+.landing-form-card .close-btn:hover { color: var(--text); }
+.landing-form-card .switch-link { text-align: center; margin-top: 12px; font-size: 13px; }
+.landing-form-card .switch-link a { color: var(--primary); cursor: pointer; text-decoration: none; }
+.landing-form-card .switch-link a:hover { text-decoration: underline; }
+.landing-form-card .success-msg { background: #d4edda; color: #155724; padding: 12px; border-radius: 6px; font-size: 13px; margin-bottom: 12px; text-align: center; }
+.landing-form-card .error-msg { background: #f8d7da; color: #721c24; padding: 12px; border-radius: 6px; font-size: 13px; margin-bottom: 12px; text-align: center; display: none; }
+</style>
 </head>
 <body>
-<!-- Login Page -->
-<div id="loginPage" class="login-page">
+<!-- Landing Page -->
+<div id="landingPage" class="landing-page">
+  <div class="landing-header">
+    <div class="landing-logo">
+      <span class="material-symbols-outlined">school</span>
+      <div><h1>Multi-School Management</h1><small>NEB Result Management System</small></div>
+    </div>
+    <div class="landing-actions">
+      <button class="btn-landing-login" onclick="App.showLandingLogin()">Login</button>
+      <button class="btn-landing-signup" onclick="App.showLandingSignup()">Register Your School</button>
+    </div>
+  </div>
+  <div class="landing-hero">
+    <h2>Manage School Results Online</h2>
+    <p>Complete NEB result management system for multiple schools. Grade sheets, admit cards, ID cards, TC, attendance, fees, library and more.</p>
+    <div class="landing-features">
+      <div class="landing-feature"><span class="material-symbols-outlined">bar_chart</span><h4>Dashboard</h4><p>Real-time analytics & reports</p></div>
+      <div class="landing-feature"><span class="material-symbols-outlined">edit_note</span><h4>Marks & Results</h4><p>Auto grade calculation & GPA</p></div>
+      <div class="landing-feature"><span class="material-symbols-outlined">badge</span><h4>ID Card & TC</h4><p>CR80 cards & certificates</p></div>
+      <div class="landing-feature"><span class="material-symbols-outlined">payments</span><h4>Fee Management</h4><p>Collection & reports</p></div>
+      <div class="landing-feature"><span class="material-symbols-outlined">calendar_month</span><h4>Attendance</h4><p>Track student & staff</p></div>
+      <div class="landing-feature"><span class="material-symbols-outlined">library_books</span><h4>Library</h4><p>Books & issue management</p></div>
+    </div>
+  </div>
+  <div class="landing-footer">&copy; 2026 Multi-School Management System</div>
+</div>
+
+<!-- Login Overlay -->
+<div id="loginOverlay" class="landing-overlay">
+  <div class="landing-form-card">
+    <button class="close-btn" onclick="App.closeLandingOverlays()">&times;</button>
+    <h3>Login</h3>
+    <p class="text-muted">Enter your credentials to access the system.</p>
+    <div id="landingLoginError" class="error-msg"></div>
+    <form id="landingLoginForm" onsubmit="return App.handleLandingLogin(event)">
+      <div class="form-group"><label>Username</label><input type="text" id="landLoginUser" class="form-control" placeholder="Enter username" required autocomplete="username"></div>
+      <div class="form-group"><label>Password</label><input type="password" id="landLoginPass" class="form-control" placeholder="Enter password" required autocomplete="current-password"></div>
+      <button type="submit" id="landLoginBtn" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Login</button>
+    </form>
+    <div class="switch-link">Don't have an account? <a onclick="App.switchLandingForm('signup')">Register your school</a></div>
+  </div>
+</div>
+
+<!-- Signup Overlay -->
+<div id="signupOverlay" class="landing-overlay">
+  <div class="landing-form-card">
+    <button class="close-btn" onclick="App.closeLandingOverlays()">&times;</button>
+    <h3>Register Your School</h3>
+    <p class="text-muted">Fill in the details to register. Super Admin will approve your account.</p>
+    <div id="landingSignupError" class="error-msg"></div>
+    <div id="landingSignupSuccess" class="success-msg" style="display:none;"></div>
+    <form id="landingSignupForm" onsubmit="return App.handleLandingSignup(event)">
+      <div class="form-group"><label>School Name *</label><input type="text" id="signupSchool" class="form-control" placeholder="School name" required></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="form-group"><label>Municipality</label><input type="text" id="signupMunicipality" class="form-control" placeholder="Municipality"></div>
+        <div class="form-group"><label>District</label><input type="text" id="signupDistrict" class="form-control" placeholder="District"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="form-group"><label>Province</label><input type="text" id="signupProvince" class="form-control" placeholder="Province"></div>
+        <div class="form-group"><label>Phone</label><input type="text" id="signupPhone" class="form-control" placeholder="Phone"></div>
+      </div>
+      <div class="form-group"><label>Email</label><input type="email" id="signupEmail" class="form-control" placeholder="Email"></div>
+      <hr style="border-color:var(--border);margin:12px 0;">
+      <p style="font-size:12px;color:var(--text-muted);margin:0 0 10px;"><i class="fas fa-info-circle"></i> Create admin account for this school:</p>
+      <div class="form-group"><label>Admin Username *</label><input type="text" id="signupUser" class="form-control" placeholder="e.g. school_admin" required minlength="3"></div>
+      <div class="form-group"><label>Admin Password *</label><input type="password" id="signupPass" class="form-control" placeholder="Min 4 characters" required minlength="4"></div>
+      <button type="submit" id="signupBtn" class="btn btn-primary"><i class="fas fa-school"></i> Register School</button>
+    </form>
+    <div class="switch-link">Already have an account? <a onclick="App.switchLandingForm('login')">Login</a></div>
+  </div>
+</div>
+
+<!-- Login Page (fallback for non-logged-in) -->
+<div id="loginPage" class="login-page" style="display:none;">
   <div class="login-card">
     <div class="login-logo"><i class="fas fa-school"></i></div>
     <h2 class="login-title">Multi-School Management</h2>

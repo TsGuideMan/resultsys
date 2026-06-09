@@ -90,6 +90,7 @@
     // Auth
     login: (username, password) => apiPost('/auth/login', { username, password }).then(r => { if (r.success && r.token) setToken(r.token); return r; }),
     logout: () => { setToken(null); return Promise.resolve({ success: true }); },
+    signup: (data) => apiPost('/auth/signup', data),
     getCurrentUser: () => apiGet('/auth/me'),
     changePassword: (userId, currentPw, newPw) => apiPost('/auth/change-password', { userId, currentPassword: currentPw, newPassword: newPw }),
     switchSchool: (schoolId) => apiPost('/auth/switch-school', { school_id: schoolId }).then(r => { if (r.success && r.token) setToken(r.token); return r; }),
@@ -100,6 +101,8 @@
     addSchool: (data) => apiPost('/schools', data),
     updateSchool: (id, data) => apiPut('/schools/' + id, data),
     deleteSchool: (id) => apiDelete('/schools/' + id),
+    approveSchool: (id) => apiPost('/schools/' + id + '/approve'),
+    rejectSchool: (id) => apiPost('/schools/' + id + '/reject'),
 
     // Users
     getUsers: (schoolId) => apiGet('/users' + qs({ school_id: schoolId })),

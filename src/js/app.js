@@ -41,11 +41,13 @@ const App = {
   async init() {
     const userRes = await api.getCurrentUser();
     if (!userRes.success || !userRes.user) {
-      document.getElementById('loginPage').style.display = 'flex';
+      document.getElementById('landingPage').style.display = 'flex';
+      document.getElementById('loginPage').style.display = 'none';
       document.getElementById('app').style.display = 'none';
       return;
     }
     this.user = userRes.user;
+    document.getElementById('landingPage').style.display = 'none';
     document.getElementById('loginPage').style.display = 'none';
     document.getElementById('app').style.display = 'flex';
     document.getElementById('userMenuName').textContent = this.user.full_name || this.user.username;
@@ -153,6 +155,89 @@ const App = {
     } else {
       pw.type = 'password';
       icon.className = 'fas fa-eye';
+    }
+  },
+
+  // ─── Landing Page ───
+
+  showLandingLogin() {
+    document.getElementById('loginOverlay').classList.add('active');
+    document.getElementById('landingLoginError').style.display = 'none';
+    document.getElementById('landLoginUser').value = '';
+    document.getElementById('landLoginPass').value = '';
+    document.getElementById('landLoginUser').focus();
+  },
+
+  showLandingSignup() {
+    document.getElementById('signupOverlay').classList.add('active');
+    document.getElementById('landingSignupError').style.display = 'none';
+    document.getElementById('landingSignupSuccess').style.display = 'none';
+    document.getElementById('landingSignupForm').style.display = 'block';
+  },
+
+  closeLandingOverlays() {
+    document.querySelectorAll('.landing-overlay').forEach(o => o.classList.remove('active'));
+  },
+
+  switchLandingForm(form) {
+    this.closeLandingOverlays();
+    if (form === 'login') this.showLandingLogin();
+    else this.showLandingSignup();
+  },
+
+  async handleLandingLogin(e) {
+    e.preventDefault();
+    const username = document.getElementById('landLoginUser').value.trim();
+    const password = document.getElementById('landLoginPass').value;
+    const btn = document.getElementById('landLoginBtn');
+    const errDiv = document.getElementById('landingLoginError');
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+    errDiv.style.display = 'none';
+    const res = await api.login(username, password);
+    if (res.success) {
+      btn.disabled = false; btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+      document.getElementById('landingPage').style.display = 'none';
+      document.getElementById('loginPage').style.display = 'none';
+      this.closeLandingOverlays();
+      await this.init();
+    } else {
+      errDiv.textContent = res.error || 'Login failed';
+      errDiv.style.display = 'block';
+      btn.disabled = false; btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+    }
+  },
+
+  async handleLandingSignup(e) {
+    e.preventDefault();
+    const data = {
+      school_name: document.getElementById('signupSchool').value.trim(),
+      municipality: document.getElementById('signupMunicipality').value.trim(),
+      district: document.getElementById('signupDistrict').value.trim(),
+      province: document.getElementById('signupProvince').value.trim(),
+      phone: document.getElementById('signupPhone').value.trim(),
+      email: document.getElementById('signupEmail').value.trim(),
+      admin_username: document.getElementById('signupUser').value.trim(),
+      admin_password: document.getElementById('signupPass').value,
+    };
+    if (!data.school_name) { alert('School name is required'); return; }
+    if (!data.admin_username || data.admin_username.length < 3) { alert('Username must be at least 3 characters'); return; }
+    if (!data.admin_password || data.admin_password.length < 4) { alert('Password must be at least 4 characters'); return; }
+    const btn = document.getElementById('signupBtn');
+    const errDiv = document.getElementById('landingSignupError');
+    const successDiv = document.getElementById('landingSignupSuccess');
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registering...';
+    errDiv.style.display = 'none';
+    successDiv.style.display = 'none';
+    const res = await api.signup(data);
+    if (res.success) {
+      successDiv.textContent = res.message || 'School registered successfully!';
+      successDiv.style.display = 'block';
+      document.getElementById('landingSignupForm').style.display = 'none';
+      btn.disabled = false; btn.innerHTML = '<i class="fas fa-school"></i> Register School';
+    } else {
+      errDiv.textContent = res.error || 'Registration failed';
+      errDiv.style.display = 'block';
+      btn.disabled = false; btn.innerHTML = '<i class="fas fa-school"></i> Register School';
     }
   },
 
@@ -750,9 +835,12 @@ const App = {
       </div>
       <div class="table-container">
         <table>
-          <thead><tr><th>#</th><th>School Name</th><th>Municipality</th><th>Province</th><th>IEMIS</th><th>Phone</th><th>Head Teacher</th><th>Students</th><th>Status</th><th>Actions</th></tr></thead>
-          <tbody>${schools.length ? schools.map((s, i) => `
-            <tr>
+          <thead><tr><th>#</th><th>School Name</th><th>Municipality</th><th>Province</th><th>IEMIS</th><th>Phone</th><th>Head Teacher</th><th>Students</th><th>Approval</th><th>Actions</th></tr></thead>
+          <tbody>${schools.length ? schools.map((s, i) => {
+            const statusLabel = s.is_approved === 1 ? 'Approved' : s.is_approved === -1 ? 'Rejected' : 'Pending';
+            const statusColor = s.is_approved === 1 ? '#d4edda' : s.is_approved === -1 ? '#f8d7da' : '#fff3cd';
+            const statusTextColor = s.is_approved === 1 ? '#155724' : s.is_approved === -1 ? '#721c24' : '#856404';
+            return `<tr>
               <td>${i+1}</td>
               <td><strong>${s.name}</strong></td>
               <td>${s.municipality||'-'}</td>
@@ -761,15 +849,31 @@ const App = {
               <td>${s.phone||'-'}</td>
               <td>${s.head_teacher||'-'}</td>
               <td>${s.student_count||0}</td>
-              <td><span class="grade-tag" style="background:${s.is_active?'#d4edda':'#f8d7da'};color:${s.is_active?'#155724':'#721c24'};">${s.is_active ? 'Active' : 'Inactive'}</span></td>
-              <td>
+              <td><span class="grade-tag" style="background:${statusColor};color:${statusTextColor};">${statusLabel}</span></td>
+              <td style="white-space:nowrap;">
+                ${s.is_approved === 0 ? `<button class="btn btn-sm btn-success" onclick="App.approveSchool(${s.id})" title="Approve"><i class="fas fa-check"></i></button> <button class="btn btn-sm btn-danger" onclick="App.rejectSchool(${s.id})" title="Reject"><i class="fas fa-times"></i></button> ` : ''}
                 <button class="btn btn-sm btn-primary" onclick="App.showEditSchoolModal(${s.id})"><i class="fas fa-edit"></i></button>
                 <button class="btn btn-sm btn-danger" onclick="App.deleteSchool(${s.id})"><i class="fas fa-trash"></i></button>
               </td>
-            </tr>`).join('') : '<tr><td colspan="10" class="text-center text-muted">No schools found</td></tr>'}</tbody>
+            </tr>`;
+          }).join('') : '<tr><td colspan="10" class="text-center text-muted">No schools found</td></tr>'}</tbody>
         </table>
       </div>
       </div>`;
+  },
+
+  async approveSchool(id) {
+    if (!confirm('Approve this school?')) return;
+    const res = await api.approveSchool(id);
+    if (res.success) { this.notify('School approved'); this.renderSchoolsPage(); }
+    else { this.notify(res.error || 'Failed', 'error'); }
+  },
+
+  async rejectSchool(id) {
+    if (!confirm('Reject this school?')) return;
+    const res = await api.rejectSchool(id);
+    if (res.success) { this.notify('School rejected'); this.renderSchoolsPage(); }
+    else { this.notify(res.error || 'Failed', 'error'); }
   },
 
   async showAddSchoolModal() {

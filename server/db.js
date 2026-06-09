@@ -118,6 +118,7 @@ function createTables() {
     watermark_repeat INTEGER DEFAULT 200,
     watermark_line_height REAL DEFAULT 2.4,
     is_active INTEGER DEFAULT 1,
+    is_approved INTEGER DEFAULT 1,
     created_at TEXT DEFAULT (datetime('now','localtime'))
   )`);
 
@@ -380,6 +381,8 @@ function createTables() {
     value TEXT
   )`);
 
+  // School approval
+  try { db.run("ALTER TABLE schools ADD COLUMN is_approved INTEGER DEFAULT 1"); } catch(e) {}
   // Add father_name/mother_name columns to students if missing
   try { db.run("ALTER TABLE students ADD COLUMN father_name TEXT DEFAULT ''"); } catch(e) {}
   try { db.run("ALTER TABLE students ADD COLUMN mother_name TEXT DEFAULT ''"); } catch(e) {}
