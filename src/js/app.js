@@ -1128,10 +1128,11 @@ const App = {
 
   // ---- DASHBOARD ----
   async renderDashboard() {
-    const [sRes, subRes, rRes, studRes, teaRes, attRes] = await Promise.all([
+    const [sRes, subRes, rRes, studRes, teaRes, attRes, notRes] = await Promise.all([
       api.getStudents({}), api.getSubjects({}), api.getResults({}),
       api.getStudents({ session: this.state.session }),
-      api.getTeachers({}), api.getAttendance({})
+      api.getTeachers({}), api.getAttendance({}),
+      api.getNotices()
     ]);
     const students = studRes.success ? studRes.data : [];
     const allStudents = sRes.success ? sRes.data : [];
@@ -1141,6 +1142,7 @@ const App = {
     const passed = results.filter(r => r.status === 'Pass').length;
     const failed = results.filter(r => r.status === 'Fail').length;
     const supp = results.filter(r => r.status === 'Supplementary').length;
+    const notices = notRes.success ? notRes.data.slice(0, 5) : [];
     const recentStudents = allStudents.slice(-6).reverse();
     const s = this.state.school;
     const logoHtml = s.school_logo ? `<img src="${s.school_logo}" style="height:50px;width:50px;object-fit:cover;border-radius:50%;border:3px solid var(--primary);">` : '';
@@ -1443,6 +1445,21 @@ const App = {
             <div class="ds-item"><div class="ds-num">${Object.groupBy ? Object.groupBy(attendances, a => a.student_id).size : new Set(attendances.map(a => a.student_id)).size}</div><div class="ds-lbl">Students</div></div>
             <div class="ds-item"><div class="ds-num">${attendances.filter(a => a.status === 'Present').length}</div><div class="ds-lbl">Present</div></div>
             <div class="ds-item"><div class="ds-num">${attendances.filter(a => a.status === 'Absent').length}</div><div class="ds-lbl">Absent</div></div>
+          </div>
+        </div>
+        <div class="dash-card">
+          <h3><i class="fas fa-bullhorn" style="color:#d97706;"></i> Notice Board <span class="badge">${notices.length}</span></h3>
+          <div style="max-height:260px;overflow-y:auto;">
+          ${notices.length ? notices.map(n => `
+            <div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px;">
+                <a href="#" onclick="App.navigate('notices');return false;" style="font-weight:600;color:var(--text);text-decoration:none;flex:1;min-width:0;">${App.escHtml(n.title)}</a>
+                <span style="font-size:10px;color:var(--text-muted);white-space:nowrap;">${(n.created_at||'').split(' ')[0]}</span>
+              </div>
+              ${n.content ? `<div style="color:var(--text-muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${App.escHtml(n.content).substring(0,80)}${n.content.length>80?'...':''}</div>` : ''}
+            </div>
+          `).join('') : '<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:12px;"><i class="fas fa-bullhorn" style="font-size:24px;opacity:0.3;display:block;margin-bottom:6px;"></i>No notices yet</div>'}
+          ${notices.length ? '<div style="text-align:center;padding-top:6px;"><a href="#" onclick="App.navigate(\'notices\');return false;" style="font-size:11px;color:var(--primary);">View all notices →</a></div>' : ''}
           </div>
         </div>
       </div>`;
