@@ -380,6 +380,18 @@ function createTables() {
     FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
   )`);
 
+  db.run(`CREATE TABLE IF NOT EXISTS notices (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    content TEXT,
+    file_name TEXT DEFAULT '',
+    file_data TEXT,
+    file_type TEXT DEFAULT '',
+    created_by INTEGER,
+    created_at TEXT DEFAULT (datetime('now','localtime')),
+    updated_at TEXT DEFAULT (datetime('now','localtime'))
+  )`);
+
   db.run(`CREATE TABLE IF NOT EXISTS settings (
     key TEXT PRIMARY KEY,
     value TEXT

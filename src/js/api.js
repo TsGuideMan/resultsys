@@ -188,6 +188,13 @@
     exportJSON: (type) => apiGet('/data/export' + qs({ type })),
     importJSON: (data) => apiPost('/data/import', { data }),
 
+    // Notices
+    getNotices: () => apiGet('/notices'),
+    getNotice: (id) => apiGet('/notices/' + id),
+    addNotice: (data) => apiPost('/notices', data),
+    updateNotice: (id, data) => apiPut('/notices/' + id, data),
+    deleteNotice: (id) => apiDelete('/notices/' + id),
+
     // Settings
     getSetting: (key) => apiGet('/data/settings/' + key),
     getAllSettings: () => apiGet('/data/settings'),

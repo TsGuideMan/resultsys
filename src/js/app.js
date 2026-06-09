@@ -368,6 +368,7 @@ const App = {
           { page: 'book-return', icon: 'circle', label: 'Book Return' },
           { page: 'book-list', icon: 'circle', label: 'Book List' },
         ]},
+        { type: 'link', page: 'notices', icon: 'campaign', label: 'Notice Board', cls: 'super-admin' },
         { type: 'link', page: 'settings', icon: 'settings', label: 'Settings', cls: 'super-admin' },
       ],
       school_admin: [
@@ -431,6 +432,7 @@ const App = {
           { page: 'exam-report', icon: 'circle', label: 'Exam Report' },
           { page: 'fee-report', icon: 'circle', label: 'Fee Report' },
         ]},
+        { type: 'link', page: 'notices', icon: 'campaign', label: 'Notice Board' },
         { type: 'link', page: 'settings', icon: 'settings', label: 'Settings' },
       ],
       teacher: [
@@ -767,6 +769,7 @@ const App = {
       'book-list':'Book List',
       'character-cert':'Character Certificate', 'bonafide-cert':'Bonafide Certificate',
       'student-report':'Student Report', 'exam-report':'Exam Report', 'fee-report':'Fee Report',
+      notices:'Notice Board',
       settings:'Settings'
     };
     document.getElementById('pageTitle').textContent = titles[page] || page;
@@ -814,6 +817,7 @@ const App = {
       case 'markledger': await this.renderLedger('marks'); break;
       case 'gradeledger': await this.renderLedger('grades'); break;
       case 'gpledger': await this.renderLedger('gradepoints'); break;
+      case 'notices': await this.renderNoticesPage(); break;
       case 'settings': await this.renderSettings(); break;
       case 'character-cert': await this.renderCharacterCertificate(); break;
       case 'bonafide-cert': await this.renderBonafideCertificate(); break;
@@ -1442,6 +1446,154 @@ const App = {
           </div>
         </div>
       </div>`;
+  },
+
+  // ---- NOTICES ----
+  async renderNoticesPage() {
+    const isSuperAdmin = this.user && this.user.role === 'super_admin';
+    const res = await api.getNotices();
+    const notices = res.success ? res.data : [];
+    const html = `
+      <style>
+        .notice-card { background:var(--card); border-radius:var(--radius); padding:16px 18px; margin-bottom:10px; box-shadow:var(--shadow); border-left:4px solid var(--primary); }
+        .notice-card .n-header { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+        .notice-card .n-title { font-size:15px; font-weight:600; color:var(--text); margin:0 0 4px; }
+        .notice-card .n-meta { font-size:11px; color:var(--text-muted); display:flex; gap:12px; flex-wrap:wrap; }
+        .notice-card .n-content { margin-top:8px; font-size:13px; color:var(--text); line-height:1.6; white-space:pre-wrap; }
+        .notice-card .n-actions { display:flex; gap:6px; flex-shrink:0; }
+        .notice-card .n-file { display:inline-flex; align-items:center; gap:6px; margin-top:8px; padding:6px 12px; background:var(--bg); border-radius:6px; font-size:12px; color:var(--primary); cursor:pointer; border:1px solid var(--border); text-decoration:none; }
+        .notice-card .n-file:hover { background:var(--primary-light); }
+        .notice-empty { text-align:center; padding:40px; color:var(--text-muted); font-size:14px; }
+        .notice-badge { display:inline-block; font-size:9px; padding:1px 8px; border-radius:10px; background:var(--primary-light); color:var(--primary); font-weight:600; }
+      </style>
+      <div class="filter-bar">
+        <div style="flex:1;"><h3 style="margin:0;font-size:16px;"><i class="fas fa-bullhorn" style="color:var(--primary);"></i> Notices & Announcements</h3></div>
+        ${isSuperAdmin ? '<button class="btn btn-primary" onclick="App.showAddNoticeModal()"><i class="fas fa-plus"></i> Add Notice</button>' : ''}
+      </div>
+      <div style="margin-top:10px;">
+        ${notices.length ? notices.map(n => `
+          <div class="notice-card">
+            <div class="n-header">
+              <div style="flex:1;min-width:0;">
+                <div class="n-title">${n.title}</div>
+                <div class="n-meta">
+                  <span><i class="far fa-calendar-alt"></i> ${n.created_at||''}</span>
+                  <span><i class="far fa-user"></i> ${n.created_by_name||'Admin'}</span>
+                  ${n.file_name ? '<span class="notice-badge"><i class="fas fa-paperclip"></i> '+n.file_name+'</span>' : ''}
+                </div>
+              </div>
+              ${isSuperAdmin ? `<div class="n-actions">
+                <button class="btn btn-sm btn-outline" onclick="App.showEditNoticeModal(${n.id})" title="Edit"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-sm btn-danger" onclick="App.deleteNotice(${n.id})" title="Delete"><i class="fas fa-trash"></i></button>
+              </div>` : ''}
+            </div>
+            ${n.content ? `<div class="n-content">${n.content}</div>` : ''}
+            ${n.file_name && n.file_data ? `<a class="n-file" href="${n.file_data}" download="${n.file_name}"><i class="fas fa-download"></i> Download ${n.file_name}</a>` : ''}
+            ${n.file_name && !n.file_data ? `<div class="n-file" style="cursor:default;color:var(--text-muted);"><i class="fas fa-paperclip"></i> ${n.file_name}</div>` : ''}
+          </div>
+        `).join('') : '<div class="notice-empty"><i class="fas fa-bullhorn" style="font-size:36px;opacity:0.3;display:block;margin-bottom:8px;"></i>No notices yet</div>'}
+      </div>`;
+    document.getElementById('pageContent').innerHTML = html;
+  },
+
+  async showAddNoticeModal() {
+    this.showModal(`
+      <h3><i class="fas fa-plus-circle"></i> Add Notice</h3>
+      <form id="noticeForm" onsubmit="return App.saveNotice(event)">
+        <div class="form-group"><label>Title *</label><input type="text" id="noticeTitle" class="form-control" placeholder="Notice title" required></div>
+        <div class="form-group"><label>Content</label><textarea id="noticeContent" class="form-control" rows="4" placeholder="Notice details..."></textarea></div>
+        <div class="form-group"><label>Attachment</label><input type="file" id="noticeFile" class="form-control" onchange="App.previewNoticeFileName(this)"><div id="noticeFileName" style="font-size:11px;color:var(--text-muted);margin-top:4px;"></div></div>
+        <button type="submit" id="noticeSaveBtn" class="btn btn-primary w-full"><i class="fas fa-save"></i> Publish Notice</button>
+      </form>
+    `);
+  },
+
+  previewNoticeFileName(input) {
+    document.getElementById('noticeFileName').textContent = input.files[0] ? 'Selected: ' + input.files[0].name : '';
+  },
+
+  async saveNotice(e) {
+    e.preventDefault();
+    const title = document.getElementById('noticeTitle').value.trim();
+    const content = document.getElementById('noticeContent').value.trim();
+    const fileInput = document.getElementById('noticeFile');
+    const btn = document.getElementById('noticeSaveBtn');
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    let fileData = null, fileName = '', fileType = '';
+    if (fileInput.files && fileInput.files[0]) {
+      const file = fileInput.files[0];
+      fileName = file.name;
+      fileType = file.type;
+      fileData = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.readAsDataURL(file);
+      });
+    }
+    const res = await api.addNotice({ title, content, file_name: fileName, file_data: fileData, file_type: fileType });
+    btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Publish Notice';
+    if (res.success) {
+      this.closeModal();
+      this.notify('Notice published', 'success');
+      this.renderNoticesPage();
+    } else {
+      this.notify(res.error || 'Failed to save notice', 'error');
+    }
+  },
+
+  async showEditNoticeModal(id) {
+    const res = await api.getNotice(id);
+    if (!res.success) { this.notify('Notice not found', 'error'); return; }
+    const n = res.data;
+    this.showModal(`
+      <h3><i class="fas fa-edit"></i> Edit Notice</h3>
+      <form id="noticeForm" onsubmit="return App.updateNotice(event, ${id})">
+        <div class="form-group"><label>Title *</label><input type="text" id="noticeTitle" class="form-control" value="${n.title.replace(/"/g,'&quot;')}" required></div>
+        <div class="form-group"><label>Content</label><textarea id="noticeContent" class="form-control" rows="4">${(n.content||'').replace(/"/g,'&quot;')}</textarea></div>
+        <div class="form-group"><label>Attachment${n.file_name ? ' (current: '+n.file_name+')' : ''}</label><input type="file" id="noticeFile" class="form-control" onchange="App.previewNoticeFileName(this)"><div id="noticeFileName" style="font-size:11px;color:var(--text-muted);margin-top:4px;"></div></div>
+        <button type="submit" id="noticeSaveBtn" class="btn btn-primary w-full"><i class="fas fa-save"></i> Update Notice</button>
+      </form>
+    `);
+  },
+
+  async updateNotice(e, id) {
+    e.preventDefault();
+    const title = document.getElementById('noticeTitle').value.trim();
+    const content = document.getElementById('noticeContent').value.trim();
+    const fileInput = document.getElementById('noticeFile');
+    const btn = document.getElementById('noticeSaveBtn');
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    const data = { title, content };
+    if (fileInput.files && fileInput.files[0]) {
+      const file = fileInput.files[0];
+      data.file_name = file.name;
+      data.file_type = file.type;
+      data.file_data = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.readAsDataURL(file);
+      });
+    }
+    const res = await api.updateNotice(id, data);
+    btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Update Notice';
+    if (res.success) {
+      this.closeModal();
+      this.notify('Notice updated', 'success');
+      this.renderNoticesPage();
+    } else {
+      this.notify(res.error || 'Failed to update notice', 'error');
+    }
+  },
+
+  async deleteNotice(id) {
+    if (!confirm('Delete this notice?')) return;
+    const res = await api.deleteNotice(id);
+    if (res.success) {
+      this.notify('Notice deleted', 'success');
+      this.renderNoticesPage();
+    } else {
+      this.notify(res.error || 'Failed to delete', 'error');
+    }
   },
 
   // ---- STUDENTS ----

@@ -10,6 +10,7 @@ const authRoutes = require('./routes/auth');
 const schoolRoutes = require('./routes/schools');
 const userRoutes = require('./routes/users');
 const dataRoutes = require('./routes/data');
+const noticeRoutes = require('./routes/notices');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -77,6 +78,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/schools', schoolRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/data', dataRoutes);
+app.use('/api/notices', noticeRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => res.json({ success: true, message: 'Server running' }));
