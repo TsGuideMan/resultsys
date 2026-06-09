@@ -12,9 +12,9 @@ router.post('/login', async (req, res) => {
     );
     if (!user) return res.json({ success: false, error: 'Invalid username or password' });
     if (user.password_hash !== password) return res.json({ success: false, error: 'Invalid username or password' });
-    if (!user.is_active) return res.json({ success: false, error: 'Account is deactivated' });
     if (user.role !== 'super_admin' && user.school_approved === 0) return res.json({ success: false, error: 'Your school account is pending approval. Please contact Super Admin.' });
     if (user.role !== 'super_admin' && user.school_approved === -1) return res.json({ success: false, error: 'Your school registration has been rejected. Please contact Super Admin.' });
+    if (!user.is_active) return res.json({ success: false, error: 'Account is deactivated' });
 
     await execute("UPDATE users SET last_login=datetime('now','localtime') WHERE id=?", [user.id]);
 

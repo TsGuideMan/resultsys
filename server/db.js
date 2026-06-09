@@ -34,9 +34,13 @@ function execute(sql, params) {
 }
 
 function insert(sql, params) {
-  getDb().run(sql, params);
+  const insertSql = sql.trim().replace(/;$/, '') + " RETURNING id";
+  const result = getDb().exec(insertSql, params);
   saveDatabase();
-  return getDb().exec("SELECT last_insert_rowid() as id")[0].values[0][0];
+  if (result && result[0] && result[0].values && result[0].values[0]) {
+    return result[0].values[0][0];
+  }
+  return 0;
 }
 
 function saveDatabase() {
