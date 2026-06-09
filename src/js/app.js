@@ -1154,8 +1154,6 @@ const App = {
     const totalGendered = male + female || 1;
     const faculties = {};
     students.forEach(st => { faculties[st.faculty] = (faculties[st.faculty] || 0) + 1; });
-    const r11 = results.filter(r => r.class === '11');
-    const r12 = results.filter(r => r.class === '12');
     const avgGpa = (arr) => arr.length ? (arr.reduce((sum, r) => sum + parseFloat(r.gpa||0), 0) / arr.length).toFixed(2) : '—';
     const gradeColors = {'A+':'#059669','A':'#10b981','B+':'#34d399','B':'#facc15','C+':'#f59e0b','C':'#f97316','D':'#ef4444','E':'#dc2626','NG':'#6b7280'};
     const genderPct = (n) => (n / totalGendered * 100).toFixed(1);
@@ -1168,6 +1166,21 @@ const App = {
       return parseInt(a) - parseInt(b);
     });
     const maxClass = Math.max(...Object.values(classes), 1);
+    const subjectsByClass = {};
+    subjects.forEach(sub => { const c = sub.class || 'N/A'; subjectsByClass[c] = (subjectsByClass[c] || 0) + 1; });
+    const subjectClassKeys = Object.keys(subjectsByClass).sort((a,b) => {
+      if (a === 'ECD') return -1; if (b === 'ECD') return 1;
+      if (a === 'N/A') return 1; if (b === 'N/A') return -1;
+      return parseInt(a) - parseInt(b);
+    });
+    const maxSubjClass = Math.max(...Object.values(subjectsByClass), 1);
+    const studentsWithGender = students.filter(st => st.gender);
+    const maleByClass = {}, femaleByClass = {};
+    studentsWithGender.forEach(st => {
+      const c = st.class || 'N/A';
+      if (st.gender === 'Male') maleByClass[c] = (maleByClass[c] || 0) + 1;
+      else femaleByClass[c] = (femaleByClass[c] || 0) + 1;
+    });
 
     document.getElementById('pageContent').innerHTML = `
       <style>
@@ -1320,45 +1333,69 @@ const App = {
               <span class="dist-count"><strong>${gradeCount[g]}</strong></span>
             </div>`).join('')}</div>` : '<div class="text-muted" style="padding:16px;text-align:center;font-size:12px;">No results yet</div>'}
         </div>
+        ${(() => {
+          const classOrder = ['ECD','1','2','3','4','5','6','7','8','9','10','11','12'];
+          const clsResults = {};
+          classOrder.forEach(c => { clsResults[c] = results.filter(r => r.class === c); });
+          return `
         <div class="dash-card">
-          <h3><i class="fas fa-chart-simple" style="color:var(--success);"></i> Class Performance</h3>
-          <table class="report-table">
-            <thead><tr><th></th><th>11</th><th>12</th><th>Total</th></tr></thead>
+          <h3><i class="fas fa-chart-simple" style="color:var(--success);"></i> Class-wise Performance</h3>
+          <div style="overflow-x:auto;">
+          <table class="report-table" style="min-width:400px;">
+            <thead><tr><th></th>${classOrder.filter(c => clsResults[c].length).map(c => `<th>${c}</th>`).join('')}<th>Total</th></tr></thead>
             <tbody>
-              <tr><td>Results</td><td>${r11.length}</td><td>${r12.length}</td><td>${r11.length + r12.length}</td></tr>
-              <tr><td>Passed</td><td>${r11.filter(r=>r.status==='Pass').length}</td><td>${r12.filter(r=>r.status==='Pass').length}</td><td>${passed}</td></tr>
-              <tr><td>Failed</td><td>${r11.filter(r=>r.status==='Fail').length}</td><td>${r12.filter(r=>r.status==='Fail').length}</td><td>${failed}</td></tr>
-              <tr><td>Supp.</td><td>${r11.filter(r=>r.status==='Supplementary').length}</td><td>${r12.filter(r=>r.status==='Supplementary').length}</td><td>${supp}</td></tr>
-              <tr><td>Avg GPA</td><td>${avgGpa(r11)}</td><td>${avgGpa(r12)}</td><td>${results.length ? (results.reduce((s,r)=>s+parseFloat(r.gpa||0),0)/results.length).toFixed(2) : '—'}</td></tr>
-              <tr><td>Pass %</td><td>${r11.length ? (r11.filter(r=>r.status==='Pass').length/r11.length*100).toFixed(1) : '—'}</td><td>${r12.length ? (r12.filter(r=>r.status==='Pass').length/r12.length*100).toFixed(1) : '—'}</td><td>${results.length ? (passed/results.length*100).toFixed(1) : '—'}</td></tr>
+              <tr><td>Students</td>${classOrder.filter(c => clsResults[c].length).map(c => `<td>${clsResults[c].length}</td>`).join('')}<td>${results.length}</td></tr>
+              <tr><td>Passed</td>${classOrder.filter(c => clsResults[c].length).map(c => `<td>${clsResults[c].filter(r=>r.status==='Pass').length}</td>`).join('')}<td>${passed}</td></tr>
+              <tr><td>Failed</td>${classOrder.filter(c => clsResults[c].length).map(c => `<td>${clsResults[c].filter(r=>r.status==='Fail').length}</td>`).join('')}<td>${failed}</td></tr>
+              <tr><td>Supp.</td>${classOrder.filter(c => clsResults[c].length).map(c => `<td>${clsResults[c].filter(r=>r.status==='Supplementary').length}</td>`).join('')}<td>${supp}</td></tr>
+              <tr><td>Avg GPA</td>${classOrder.filter(c => clsResults[c].length).map(c => `<td>${avgGpa(clsResults[c])}</td>`).join('')}<td>${results.length ? (results.reduce((s,r)=>s+parseFloat(r.gpa||0),0)/results.length).toFixed(2) : '—'}</td></tr>
+              <tr><td>Pass %</td>${classOrder.filter(c => clsResults[c].length).map(c => `<td>${clsResults[c].length ? (clsResults[c].filter(r=>r.status==='Pass').length/clsResults[c].length*100).toFixed(1) : '—'}</td>`).join('')}<td>${results.length ? (passed/results.length*100).toFixed(1) : '—'}</td></tr>
             </tbody>
           </table>
-          ${results.length ? `
-          <div style="margin-top:6px;">
-            <div class="cmp-bar"><span class="cmp-lbl" style="width:16px;font-weight:600;font-size:10px;">11</span><div class="cmp-track"><div class="cmp-fill" style="width:${r11.length ? (r11.filter(r=>r.status==='Pass').length/r11.length*100).toFixed(0) : 0}%;background:var(--success);"></div></div><span class="cmp-val" style="width:32px;font-size:10px;">${r11.length ? (r11.filter(r=>r.status==='Pass').length/r11.length*100).toFixed(1) : '—'}</span></div>
-            <div class="cmp-bar"><span class="cmp-lbl" style="width:16px;font-weight:600;font-size:10px;">12</span><div class="cmp-track"><div class="cmp-fill" style="width:${r12.length ? (r12.filter(r=>r.status==='Pass').length/r12.length*100).toFixed(0) : 0}%;background:var(--primary);"></div></div><span class="cmp-val" style="width:32px;font-size:10px;">${r12.length ? (r12.filter(r=>r.status==='Pass').length/r12.length*100).toFixed(1) : '—'}</span></div>
-          </div>` : ''}
+          </div>
+          ${results.length ? `<div style="margin-top:8px;">${classOrder.filter(c => clsResults[c].length).map(c => {
+            const pct = clsResults[c].length ? (clsResults[c].filter(r=>r.status==='Pass').length/clsResults[c].length*100).toFixed(0) : 0;
+            return `<div class="cmp-bar"><span class="cmp-lbl" style="width:24px;font-weight:600;font-size:10px;">${c}</span><div class="cmp-track"><div class="cmp-fill" style="width:${Math.min(pct,100)}%;background:var(--success);"></div></div><span class="cmp-val" style="width:40px;font-size:10px;color:var(--success);">${pct}%</span></div>`;
+          }).join('')}</div>` : ''}
         </div>
         <div class="dash-card">
-          <h3><i class="fas fa-venus-mars" style="color:#d97706;"></i> Gender</h3>
+          <h3><i class="fas fa-chart-pie" style="color:#8b5cf6;"></i> Pass Rate by Class</h3>
+          ${results.length ? classOrder.filter(c => clsResults[c].length).map(c => {
+            const pct = clsResults[c].length ? (clsResults[c].filter(r=>r.status==='Pass').length/clsResults[c].length*100).toFixed(0) : 0;
+            const failPct = 100 - parseInt(pct);
+            return `<div class="cls-bar">
+              <span class="cl-lbl" style="width:36px;">${c}</span>
+              <div class="cl-track" style="height:16px;background:#f3f4f6;display:flex;gap:1px;">
+                <div style="width:${pct}%;height:100%;background:linear-gradient(90deg,#059669,#10b981);border-radius:${failPct > 0 ? '7px 0 0 7px' : '7px'};"></div>
+                ${failPct > 0 ? `<div style="width:${failPct}%;height:100%;background:linear-gradient(90deg,#ef4444,#dc2626);border-radius:0 7px 7px 0;"></div>` : ''}
+              </div>
+              <span class="cl-count" style="width:44px;font-size:10px;">${pct}%</span>
+            </div>`;
+          }).join('') : '<div class="text-muted" style="text-align:center;padding:12px;font-size:12px;">No results yet</div>'}
+        </div>`;
+        })()}
+        <div class="dash-card">
+          <h3><i class="fas fa-venus-mars" style="color:#d97706;"></i> Gender Ratio</h3>
           <div class="gender-donut" style="gap:8px;">
             <div class="donut" style="width:65px;height:65px;background:conic-gradient(#1a56db 0% ${genderPct(male)}%, #059669 ${genderPct(male)}% 100%);">
               <div class="donut-center" style="inset:10px;font-size:14px;">${students.length}</div>
             </div>
             <div class="gender-legend">
-              <div class="gl-item" style="font-size:10px;padding:1px 0;"><span class="gl-dot" style="width:8px;height:8px;background:#1a56db;"></span> Male <span class="gl-count" style="font-size:10px;">${male}</span></div>
-              <div class="gl-item" style="font-size:10px;padding:1px 0;"><span class="gl-dot" style="width:8px;height:8px;background:#059669;"></span> Female <span class="gl-count" style="font-size:10px;">${female}</span></div>
+              <div class="gl-item" style="font-size:10px;padding:1px 0;"><span class="gl-dot" style="width:8px;height:8px;background:#1a56db;"></span> Male <span class="gl-count" style="font-size:10px;">${male} (${genderPct(male)}%)</span></div>
+              <div class="gl-item" style="font-size:10px;padding:1px 0;"><span class="gl-dot" style="width:8px;height:8px;background:#059669;"></span> Female <span class="gl-count" style="font-size:10px;">${female} (${genderPct(female)}%)</span></div>
             </div>
           </div>
-          <div style="margin-top:6px;padding-top:5px;border-top:1px dashed var(--border);">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 6px;">
-              ${Object.entries(faculties).length ? Object.entries(faculties).sort((a,b)=>b[1]-a[1]).map(([f, c]) => `
-              <div style="display:flex;justify-content:space-between;padding:2px 6px;background:var(--bg);border-radius:4px;font-size:10px;">
-                <span>${f}</span>
-                <span style="font-weight:700;color:var(--primary);">${c}</span>
-              </div>`).join('') : ''}
-            </div>
-          </div>
+        </div>
+        <div class="dash-card">
+          <h3><i class="fas fa-building-columns" style="color:#8b5cf6;"></i> Faculty Distribution</h3>
+          ${Object.entries(faculties).length ? `
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+            ${Object.entries(faculties).sort((a,b)=>b[1]-a[1]).map(([f, c]) => `
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 8px;background:var(--bg);border-radius:6px;font-size:11px;">
+              <span style="font-weight:500;">${f}</span>
+              <span style="font-weight:700;color:var(--primary);background:var(--primary-light);padding:1px 8px;border-radius:10px;font-size:10px;">${c}</span>
+            </div>`).join('')}
+          </div>` : '<div class="text-muted" style="text-align:center;padding:12px;font-size:12px;">No students</div>'}
         </div>
         <div class="dash-card">
           <h3><i class="fas fa-layer-group" style="color:#8b5cf6;"></i> Class Distribution</h3>
@@ -1368,6 +1405,32 @@ const App = {
               <div class="cl-track"><div class="cl-fill" style="width:${(classes[cls]/maxClass*100).toFixed(0)}%;"></div></div>
               <span class="cl-count">${classes[cls]}</span>
             </div>`).join('') : '<div class="text-muted" style="text-align:center;padding:12px;font-size:12px;">No students</div>'}
+        </div>
+        <div class="dash-card">
+          <h3><i class="fas fa-book-open" style="color:#6366f1;"></i> Subjects by Class</h3>
+          ${subjectClassKeys.length ? subjectClassKeys.map(cls => `
+            <div class="cls-bar">
+              <span class="cl-lbl">${cls}</span>
+              <div class="cl-track"><div class="cl-fill" style="width:${(subjectsByClass[cls]/maxSubjClass*100).toFixed(0)}%;background:linear-gradient(90deg,#6366f1,#8b5cf6);"></div></div>
+              <span class="cl-count">${subjectsByClass[cls]}</span>
+            </div>`).join('') : '<div class="text-muted" style="text-align:center;padding:12px;font-size:12px;">No subjects</div>'}
+        </div>
+        <div class="dash-card">
+          <h3><i class="fas fa-chart-line" style="color:#059669;"></i> Student-Teacher Ratio</h3>
+          <div style="text-align:center;padding:8px 0;">
+            <div style="font-size:36px;font-weight:800;color:var(--primary);">${teachers.length ? (students.length/teachers.length).toFixed(1) : '—'}</div>
+            <div style="font-size:11px;color:var(--text-muted);">:1 (Student:Teacher)</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px;">
+            <div style="text-align:center;padding:6px;background:var(--bg);border-radius:6px;">
+              <div style="font-size:18px;font-weight:700;color:var(--primary);">${students.length}</div>
+              <div style="font-size:10px;color:var(--text-muted);">Total Students</div>
+            </div>
+            <div style="text-align:center;padding:6px;background:var(--bg);border-radius:6px;">
+              <div style="font-size:18px;font-weight:700;color:var(--success);">${teachers.length}</div>
+              <div style="font-size:10px;color:var(--text-muted);">Teachers</div>
+            </div>
+          </div>
         </div>
         <div class="dash-card">
           <h3><i class="fas fa-clipboard-check" style="color:#059669;"></i> Attendance Overview</h3>
