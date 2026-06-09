@@ -8764,18 +8764,20 @@ const App = {
 
   // ---- SETTINGS ----
   async renderSettings() {
+    const isSuperAdmin = this.user && this.user.role === 'super_admin';
     const sesRes = await api.getSetting('current_session');
     const currentSession = sesRes.success ? sesRes.value : '';
     const s = this.state.school;
     const logoPreview = s.school_logo ? `<img src="${s.school_logo}" style="max-height:80px;max-width:160px;margin-top:8px;border:1px solid var(--border);border-radius:4px;padding:4px;">` : '<p class="text-muted" style="font-size:12px;">No logo uploaded</p>';
     document.getElementById('pageContent').innerHTML = `
       <div style="max-width:750px;">
-        <div class="settings-tabs" style="display:flex;gap:2px;margin-bottom:14px;border-bottom:2px solid var(--border);">
+        <div class="settings-tabs" style="display:flex;gap:2px;margin-bottom:14px;border-bottom:2px solid var(--border);flex-wrap:wrap;">
           <button class="settings-tab active" data-tab="school" onclick="App.switchSettingsTab('school')"><i class="fas fa-school"></i> School</button>
           <button class="settings-tab" data-tab="acyear" onclick="App.switchSettingsTab('acyear')"><i class="fas fa-calendar"></i> Academic Year</button>
           <button class="settings-tab" data-tab="watermark" onclick="App.switchSettingsTab('watermark')"><i class="fas fa-tint"></i> Watermark</button>
           <button class="settings-tab" data-tab="data" onclick="App.switchSettingsTab('data')"><i class="fas fa-database"></i> Data</button>
           <button class="settings-tab" data-tab="backup" onclick="App.switchSettingsTab('backup')"><i class="fas fa-cloud-upload-alt"></i> Backup</button>
+          <button class="settings-tab" data-tab="roles" onclick="App.switchSettingsTab('roles')"><i class="fas fa-user-shield"></i> Roles</button>
           <button class="settings-tab" data-tab="about" onclick="App.switchSettingsTab('about')"><i class="fas fa-info-circle"></i> About</button>
         </div>
 
@@ -8887,6 +8889,85 @@ const App = {
         <div id="settingsTabBackup" class="settings-panel">
           <div id="driveBackupContent">
             <p class="text-muted" style="font-size:13px;"><i class="fas fa-spinner fa-spin"></i> Loading backup settings...</p>
+          </div>
+        </div>
+
+        <div id="settingsTabRoles" class="settings-panel">
+          <div class="card" style="background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);">
+            <h3 class="mb-2"><i class="fas fa-user-shield"></i> Roles & Permissions</h3>
+            <p class="text-muted" style="font-size:13px;margin-bottom:12px;">यस प्रणालीमा ६ वटा भूमिकाहरू (Roles) छन्। तल प्रत्येक भूमिकाको अधिकार सूचीबद्ध गरिएको छ।</p>
+
+            ${isSuperAdmin ? `
+            <div style="background:#e8f5e9;border:1px solid #a5d6a7;border-radius:6px;padding:12px;margin-bottom:16px;font-size:13px;">
+              <strong style="color:#2e7d32;">👑 Super Admin</strong> — तपाईं सुपर एडमिन हुनुहुन्छ। तपाईंलाई सबै सुविधाहरूमा पूर्ण पहुँच छ।
+            </div>
+            ` : `
+            <div style="background:#fff3e0;border:1px solid #ffcc80;border-radius:6px;padding:12px;margin-bottom:16px;font-size:13px;">
+              <strong style="color:#e65100;">ℹ️ तपाईंको भूमिका: ${this.user.role}</strong> — तल तपाईंको भूमिका अनुसारको पहुँच हेर्नुहोस्।
+            </div>
+            `}
+
+            ${[
+              { role: 'super_admin', label: 'Super Admin', color: '#1a3a5c', permissions: [
+                'सबै विद्यालयहरूको व्यवस्थापन (थप्ने, सम्पादन, मेटाउने)',
+                'सबै प्रयोगकर्ताहरूको व्यवस्थापन (थप्ने, सम्पादन, मेटाउने, पासवर्ड रिसेट)',
+                'सबै विद्यालयको ड्यासबोर्ड, तथ्याङ्क र रिपोर्ट हेर्ने',
+                'एक विद्यालयबाट अर्कोमा स्विच गरेर काम गर्ने',
+                'विद्यार्थी, शिक्षक, कर्मचारी, विषय, अङ्क, नतिजा, उपस्थिति, शुल्क, पुस्तकालय — सबै सुविधा',
+                'स्याटिङ्ग, डाटा एक्सपोर्ट/इम्पोर्ट, ब्याकअप',
+                'ग्रेडसिट, एडमिट कार्ड, आईडी कार्ड, ट्रान्सफर सर्टिफिकेट प्रिन्ट',
+              ]},
+              { role: 'school_admin', label: 'School Admin', color: '#1565c0', permissions: [
+                'आफ्नो विद्यालयको प्रोफाइल व्यवस्थापन',
+                'विद्यार्थी भर्ना, सम्पादन, अभिलेख, बल्क इम्पोर्ट, प्रमोशन',
+                'विद्यार्थी प्रोफाइल हेर्ने (थ्री-टर्म GPA, उपस्थिति, अभिभावक जानकारी)',
+                'शिक्षक र कर्मचारी दर्ता तथा व्यवस्थापन',
+                'विषयहरू (Subject) थप्ने, सम्पादन, प्रिसेट लोड, टेम्प्लेट/एक्सपोर्ट/इम्पोर्ट',
+                'कक्षा र सेक्सन व्यवस्थापन, कक्षा रुटिन',
+                'विद्यार्थीलाई विषय दर्ता (Subject Registration)',
+                'एडमिट कार्ड हेर्ने र प्रिन्ट गर्ने',
+                'परीक्षा अङ्क प्रविष्ट (Term 1, Term 2, Final)',
+                'नतिजा प्रशोधन (GPA, Grade, Status)',
+                'मार्क लेजर, ग्रेड लेजर, GPA लेजर',
+                'ग्रेडसिट, आईडी कार्ड, ट्रान्सफर सर्टिफिकेट हेर्ने/प्रिन्ट',
+                'विद्यार्थी, शिक्षक उपस्थिति र रिपोर्ट',
+                'शुल्क सेटअप, शुल्क संकलन, बाँकी सूची, रसिद प्रिन्ट, आय रिपोर्ट',
+                'पुस्तक प्रविष्टि, पुस्तक जारी, फिर्ता, सूची',
+                'प्रमाणपत्र (चरित्र, बोनाफाइड, टिसी)',
+                'रिपोर्ट (विद्यार्थी, उपस्थिति, परीक्षा, शुल्क)',
+                'एक्सेल डाउनलोड, डाटा एक्सपोर्ट/इम्पोर्ट',
+                'स्याटिङ्ग (स्कुल प्रोफाइल, शैक्षिक सत्र, वाटरमार्क)',
+              ]},
+              { role: 'teacher', label: 'Teacher', color: '#2e7d32', permissions: [
+                'ड्यासबोर्ड हेर्ने',
+                'परीक्षा अङ्क प्रविष्ट (Marks Entry)',
+                'नतिजा हेर्ने',
+                'विद्यार्थी उपस्थिति हाल्ने',
+              ]},
+              { role: 'accountant', label: 'Accountant', color: '#e65100', permissions: [
+                'ड्यासबोर्ड हेर्ने',
+                'शुल्क सेटअप र शुल्क संकलन',
+                'बाँकी सूची, रसिद प्रिन्ट, आय रिपोर्ट',
+              ]},
+              { role: 'librarian', label: 'Librarian', color: '#6a1b9a', permissions: [
+                'ड्यासबोर्ड हेर्ने',
+                'पुस्तक प्रविष्टि, जारी, फिर्ता, सूची',
+              ]},
+              { role: 'staff', label: 'Staff', color: '#c62828', permissions: [
+                'ड्यासबोर्ड हेर्ने',
+                'विद्यार्थी उपस्थिति हाल्ने',
+                'उपस्थिति रिपोर्ट हेर्ने',
+              ]},
+            ].map(r => `
+              <div style="margin-bottom:14px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">
+                <div style="background:${r.color};color:#fff;padding:10px 14px;font-size:14px;font-weight:600;">${r.label}</div>
+                <div style="padding:10px 14px;font-size:13px;line-height:1.7;">
+                  <ul style="margin:0;padding-left:18px;">
+                    ${r.permissions.map(p => `<li>${p}</li>`).join('')}
+                  </ul>
+                </div>
+              </div>
+            `).join('')}
           </div>
         </div>
 
