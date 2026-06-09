@@ -1,0 +1,1 @@
+CreateObject("WScript.Shell").Run "cmd /c cd /d """ & CreateObject("Scripting.FileSystemObject").GetParentFolderName(WScript.ScriptFullName) & """ && node_modules\electron\dist\electron.exe .", 0, False

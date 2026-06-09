@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: resultsys
+    env: node
+    buildCommand: npm install
+    startCommand: node server/server.js
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+      - key: HOST
+        value: 0.0.0.0
+    disk:
+      name: data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1

@@ -1,0 +1,8 @@
+@page { size: A4; margin: 15mm; }
+body { font-size: 12pt; }
+#print-area { max-width: 100%; }
+.report-card { padding: 0; margin: 0; }
+.report-header h1 { font-size: 18pt; }
+.report-marksheet th, .report-marksheet td { font-size: 10pt; padding: 4px 8px; }
+.no-print { display: none !important; }
+.btn, .modal-actions button { display: none !important; }
