@@ -29,7 +29,7 @@ router.post('/login', async (req, res) => {
 
 router.post('/signup', async (req, res) => {
   try {
-    const { school_name, municipality, district, province, phone, email, admin_username, admin_password } = req.body;
+    const { school_name, municipality, district, province, iemis_id, phone, email, admin_username, admin_password } = req.body;
     if (!school_name || !admin_username || !admin_password) {
       return res.json({ success: false, error: 'School name, admin username and password are required' });
     }
@@ -42,9 +42,9 @@ router.post('/signup', async (req, res) => {
 
     // Create school (pending approval)
     const schoolId = await insert(
-      `INSERT INTO schools (name, municipality, district, province, phone, email, is_approved)
-       VALUES (?,?,?,?,?,?,0)`,
-      [school_name, municipality||'', district||'', province||'', phone||'', email||'']
+      `INSERT INTO schools (name, municipality, district, province, iemis_id, phone, email, is_approved)
+       VALUES (?,?,?,?,?,?,?,0)`,
+      [school_name, municipality||'', district||'', province||'', iemis_id||'', phone||'', email||'']
     );
 
     // Create school admin user

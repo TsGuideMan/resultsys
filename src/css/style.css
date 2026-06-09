@@ -390,15 +390,5 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 .gs-footer-right p { margin:1px 0; }
 
 /* Landing overlay form styles */
-.landing-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:1000; }
-.landing-overlay.active { display:flex; }
-.landing-form-card { background:#fff; border-radius:12px; padding:32px; width:100%; max-width:420px; box-shadow:0 20px 60px rgba(0,0,0,0.3); position:relative; max-height:90vh; overflow-y:auto; }
-.landing-form-card h3 { font-size:20px; margin:0 0 6px; color:var(--text); }
-.landing-form-card .text-muted { font-size:13px; }
-.landing-form-card .form-group { margin-bottom:12px; }
 .landing-form-card label { display:block; font-size:13px; font-weight:500; margin-bottom:4px; color:var(--text); }
-.landing-form-card .close-btn { background:none; border:none; font-size:28px; cursor:pointer; color:#9ca3af; padding:0; line-height:1; }
-.landing-form-card .close-btn:hover { color:var(--text); }
-.landing-form-card .switch-link { text-align:center; margin-top:12px; font-size:13px; color:var(--text-muted); }
-.landing-form-card .switch-link a { color:var(--primary); cursor:pointer; text-decoration:none; }
-.landing-form-card .switch-link a:hover { text-decoration:underline; }
+.landing-form-card .btn { border-radius:8px; }

@@ -44,6 +44,7 @@ const App = {
       document.getElementById('landingPage').style.display = 'flex';
       document.getElementById('loginPage').style.display = 'none';
       document.getElementById('app').style.display = 'none';
+      this.loadApprovedSchools();
       return;
     }
     this.user = userRes.user;
@@ -207,6 +208,25 @@ const App = {
     }
   },
 
+  async loadApprovedSchools() {
+    const res = await api.getApprovedSchools();
+    const grid = document.getElementById('schoolsGrid');
+    if (!res.success || !res.data || !res.data.length) {
+      grid.innerHTML = '<div class="schools-empty">No schools registered yet. Be the first one!</div>';
+      return;
+    }
+    grid.innerHTML = res.data.map(s => `
+      <div class="school-card">
+        <div class="school-logo-wrap">
+          ${s.school_logo ? `<img src="${s.school_logo}" alt="${s.name}">` : '<span class="material-symbols-outlined no-logo">school</span>'}
+        </div>
+        <h4>${s.name}</h4>
+        ${s.iemis_id ? `<p class="school-iemis"><i class="fas fa-fingerprint" style="font-size:10px;"></i> IEMIS: ${s.iemis_id}</p>` : ''}
+        ${(s.municipality || s.district) ? `<p class="school-location"><i class="fas fa-map-marker-alt" style="font-size:10px;"></i> ${[s.municipality, s.district].filter(Boolean).join(', ')}</p>` : ''}
+      </div>
+    `).join('');
+  },
+
   async handleLandingSignup(e) {
     e.preventDefault();
     const data = {
@@ -214,6 +234,7 @@ const App = {
       municipality: document.getElementById('signupMunicipality').value.trim(),
       district: document.getElementById('signupDistrict').value.trim(),
       province: document.getElementById('signupProvince').value.trim(),
+      iemis_id: document.getElementById('signupIemis').value.trim(),
       phone: document.getElementById('signupPhone').value.trim(),
       email: document.getElementById('signupEmail').value.trim(),
       admin_username: document.getElementById('signupUser').value.trim(),
@@ -234,6 +255,7 @@ const App = {
       successDiv.style.display = 'block';
       document.getElementById('landingSignupForm').style.display = 'none';
       btn.disabled = false; btn.innerHTML = '<i class="fas fa-school"></i> Register School';
+      this.loadApprovedSchools();
     } else {
       errDiv.textContent = res.error || 'Registration failed';
       errDiv.style.display = 'block';

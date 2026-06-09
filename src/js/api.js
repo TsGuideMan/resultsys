@@ -97,6 +97,7 @@
 
     // Schools
     getSchools: () => apiGet('/schools'),
+    getApprovedSchools: () => apiGet('/schools/approved'),
     getSchool: (id) => apiGet('/schools/' + id),
     addSchool: (data) => apiPost('/schools', data),
     updateSchool: (id, data) => apiPut('/schools/' + id, data),

@@ -61,6 +61,17 @@ app.post('/api/upload-base64', (req, res) => {
   } catch (e) { res.json({ success: false, error: e.message }); }
 });
 
+// Public: approved schools for landing page (no auth required)
+app.get('/api/schools/approved', async (req, res) => {
+  try {
+    const { query } = require('./db');
+    const rows = await query(
+      "SELECT id, name, iemis_id, school_logo, municipality, district, phone, email FROM schools WHERE is_approved=1 ORDER BY name ASC"
+    );
+    res.json({ success: true, data: rows });
+  } catch (e) { res.json({ success: false, error: e.message }); }
+});
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/schools', schoolRoutes);
